@@ -1,0 +1,14 @@
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = [".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+# tabelas de dados em blocos `# fmt: off` têm linhas longas de propósito
+per-file-ignores = { "ecos_rpg/config.py" = ["E501"], "ecos_rpg/engine/**" = ["E501"] }
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]

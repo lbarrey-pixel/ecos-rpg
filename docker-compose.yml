@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ecos
+      POSTGRES_PASSWORD: ecos
+      POSTGRES_DB: ecos
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecos -d ecos"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  # Aplica as migrações e sincroniza o catálogo de cosméticos ao subir.
+  bot:
+    build: .
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql://ecos:ecos@db:5432/ecos
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
